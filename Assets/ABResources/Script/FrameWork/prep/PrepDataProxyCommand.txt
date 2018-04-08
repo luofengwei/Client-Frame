@@ -1,0 +1,17 @@
+local PrepDataProxyCommand = class("PrepDataProxyCommand",pm.SimpleCommand)
+
+CDlgMgr = autoImport("CDlgMgr")
+LoginProxy = autoImport("LoginProxy")
+TimeTickManager = autoImport("TimeTickManager")
+
+autoImport("UIManagerProxy");
+
+function PrepDataProxyCommand:execute(noti)
+	-- body
+	GameFacade.Instance:registerProxy(UIManagerProxy.new())
+	GameFacade.Instance:registerProxy(CDlgMgr.new())
+	GameFacade.Instance:registerProxy(LoginProxy.new())
+	GameFacade.Instance:registerProxy(TimeTickManager.new())
+end
+
+return PrepDataProxyCommand

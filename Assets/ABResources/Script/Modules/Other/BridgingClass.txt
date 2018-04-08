@@ -1,0 +1,6 @@
+BridgingClass = {}
+
+function BridgingClass.ShowLoginUI()
+	-- body
+	CDlgMgr.Instance:fetchAndShowDlg(DlgEnum.Login)
+end

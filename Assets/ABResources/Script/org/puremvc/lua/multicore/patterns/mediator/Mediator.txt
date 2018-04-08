@@ -1,0 +1,155 @@
+--[[
+ * @author PureMVC Lua Native Port by Sean 
+ * @author Copyright(c) 2006-2012 Futurescale, Inc., Some rights reserved.
+ * 
+ * @class puremvc.Mediator
+ * @extends puremvc.Notifier
+ * 
+ * A base Mediator implementation.
+ * 一个基础的中介者实现
+ *
+ * In PureMVC, Mediator classes are used to mediate communication between a view 
+ * component and the rest of the application.
+ * 在PureMVC里，中介者类被用来作为view组件和其他应用部分调解和沟通的方式。
+ * 
+ * A Mediator should listen to its view components for events, and handle them 
+ * by sending notifications (to be handled by other Mediators, 
+ * {@link puremvc.SimpleCommand SimpleCommands} 
+ * or
+ * {@link puremvc.MacroCommand MacroCommands}) 
+ * or passing data from the view component directly to a 
+ * {@link puremvc.Proxy Proxy}, such as submitting 
+ * the contents of a form to a service.
+ * 一个中介者应当监听它的view组件事件和通过通知来操纵他们（被其他中介者操纵，例如simpleCommands和macroCommands）
+ * 或者直接吧view组件的数据传输给proxy，例如提交一个表单内容给服务
+ * 
+ * Mediators should not perform business logic, maintain state or other 
+ * information for its view component, or break the encapsulation of the view 
+ * component by manipulating the view component's children. It should only call 
+ * methods or set properties on the view component.
+ * 中介者们不应该执行业务逻辑，维护状态或者其他View组件的信息，或者通过操纵View组件的子类打断视图组件的封装。
+ * 它应该只被限制进行View的组件方法调用或者属性设置。
+ *  
+ * The view component should encapsulate its own behavior and implementation by 
+ * exposing methods and properties that the Mediator can call without having to 
+ * know about the view component's children.
+ * 这个View组件应该封装自己的行为并且通过公开给中介者能调用的方法和属性进行实现，而不必知道View组件的子类。
+ * 
+ * @constructor
+ * @param {string} [mediatorName]
+ *  The Mediators name. The Mediators static #NAME value is used by default
+ * 中介者的名称。如果不指定，默认的中介者静态名称将会被使用。
+ * @param {Object} [viewComponent]
+ *  The Mediators {@link #setViewComponent viewComponent}.
+ * 中介者
+]]
+local Notifier = import('..observer.Notifier')
+local Mediator = class('Mediator', Notifier)
+
+function Mediator:ctor(mediatorName, viewComponent)
+	self.mediatorName = mediatorName or Mediator.NAME
+	self.viewComponent = viewComponent
+end
+--[[
+ * @static
+ * The name of the Mediator.
+ * 中介者的名称
+ * 
+ * Typically, a Mediator will be written to serve one specific control or group
+ * of controls and so, will not have a need to be dynamically named.
+ * 通常，一个中介者将会去服务于一个指定的Control或者一组Control,并且没有动态命名的需求
+ * 
+ * @type {string}
+]]
+Mediator.NAME = 'Mediator'
+--[[
+ * Get the name of the Mediator
+ * 获得这个中介者的名称
+ * 
+ * @return {string}
+ *  The Mediator name
+]]
+function Mediator:getMediatorName()
+	return self.mediatorName
+end
+--[[
+ * Set the Mediators view component. This could
+ * be a HTMLElement, a bespoke UiComponent wrapper
+ * class, a MooTools Element, a jQuery result or a
+ * css selector, depending on which DOM abstraction 
+ * library you are using.
+ * 设置中介者View组件。这将会是一个HTML组件，一个定制的UIComponet包装类，
+ * 一个MooTools元素，一个JQuery查询结果或者要给css选择器，这依赖于你使用的DOM抽象库
+ * 
+ * @param {Object} the view component
+ * @return {void}
+]]
+function Mediator:setViewComponent(viewComponent)
+	self.viewComponent = viewComponent
+end
+--[[
+ * Get the Mediators view component.
+ * 获取这个中介者View组件
+ * 
+ * Additionally, an optional explicit getter can be
+ * be defined in the subclass that defines the 
+ * view components, providing a more semantic interface
+ * to the Mediator.
+ * 此外，一个可选的明确的getter获取接口可以定义在子类View组件里，为中介者提供更有具体语义的接口
+ * 
+ * This is different from the AS3 implementation in
+ * the sense that no casting is required from the
+ * object supplied as the view component.
+ * 就意义上来说这是一个与AS3不同的实现，故而不需要从作为View组件提供的对象中进行转换。
+ * 
+ *     MyMediator.prototype.getComboBox= function ()
+ *     {
+ *         return this.viewComponent;  
+ *     }
+ * 
+ * @return {Object}
+ *  The view component
+ ]]
+function Mediator:getViewComponent()
+	return self.viewComponent
+end
+--[[
+ * List the Notification names this Mediator is interested
+ * in being notified of.
+ * 列出了这个中介者有意通知的通知名称列表
+ * 
+ * @return {Array} 
+ *  The list of Notification names.
+]]
+function Mediator:listNotificationInterests()
+	return {}
+end
+--[[
+ * Handle Notifications.
+ * 持有操纵通知
+ * 
+ * Typically this will be handled in a switch statement
+ * with one 'case' entry per Notification the Mediator
+ * is interested in
+ * 通常情况下，这将在一个开关语句中处理，case处理中介者有意的每一个通知。
+ *
+ * @param {puremvc.Notification} notification
+ * @return {void}
+]]
+function Mediator:handleNotification(notification)
+end
+--[[
+ * Called by the View when the Mediator is registered
+ * 被View调用，当这个中介者被注册的时候
+ * @return {void}
+]]
+function Mediator:onRegister()
+end
+--[[
+ * Called by the View when the Mediator is removed
+ * 被View调用，当这个中介者被移除的时候
+]]
+function Mediator:onRemove()
+end
+
+return Mediator

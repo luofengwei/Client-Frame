@@ -1,0 +1,116 @@
+--[[
+ * @author PureMVC Lua Native Port by Sean
+ * @author Copyright(c) 2006-2012 Futurescale, Inc., Some rights reserved.
+ * 
+ * @class puremvc.Notifier
+ * 
+ * A Base Notifier implementation.
+ * 一个基本的Notifier实现
+ * 
+ * {@link puremvc.MacroCommand MacroCommand}, 
+ * {@link puremvc.SimpleCommand SimpleCommand}, 
+ * {@link puremvc.Mediator Mediator} and 
+ * {@link puremvc.Proxy Proxy}
+ * all have a need to send Notifications
+ * MarcoCommand,SimpleCommand,Mediator,Proxy都需要发送通知
+ * 
+ * The Notifier interface provides a common method called #sendNotification that 
+ * relieves implementation code of the necessity to actually construct 
+ * Notifications.
+ * Notifier接口提供一个通用方法调用接口SendNotification为了减少实现代码构建Notifications的必要
+ * 
+ * The Notifier class, which all of the above mentioned classes
+ * extend, provides an initialized reference to the 
+ * {@link puremvc.Facade Facade}
+ * Multiton, which is required for the convienience method
+ * for sending Notifications but also eases implementation as these
+ * classes have frequent 
+ * {@link puremvc.Facade Facade} interactions 
+ * and usually require access to the facade anyway.
+ * Notifier类，所有上述类都扩展自他，提供了一个外观的多例key初始化引用，这是方便发送Notification所必要的，
+ * 这些类需要经常频繁的实现发送
+ * 
+ * NOTE: In the MultiCore version of the framework, there is one caveat to
+ * notifiers, they cannot send notifications or reach the facade until they
+ * have a valid multitonKey. 
+ * 注意：在多核版本的框架下，这儿有一个警告要给notifiers，他们无法发送通知或者获取外观直到他们有合法的
+ * 
+ * The multitonKey is set:
+ *   - on a Command when it is executed by the Controller
+ *   - on a Mediator is registered with the View
+ *   - on a Proxy is registered with the Model. 
+ * 多例key的设置：
+ *   - 在Command里当他被Controller执行
+ *   - 在Mediator里是注册在View上
+ *   - 在Proxy里是注册在Model上
+ * 
+ * @constructor
+]]
+local Facade = import('..facade.Facade')
+
+local Notifier = class("Notifier")
+
+function Notifier:ctor()
+end
+
+--[[
+ * Create and send a Notification.
+ *
+ * Keeps us from having to construct new Notification instances in our 
+ * implementation code.
+ * 
+ * @param {string} notificationName
+ *  A notification name
+ * @param {Object} [body]
+ *  The body of the notification
+ * @param {string} [type]
+ *  The notification type
+ * @return {void}
+]]
+function Notifier:sendNotification(notificationName, body, type)
+	local facade = self:getFacade()
+	if facade ~= nil then
+		facade:sendNotification(notificationName, body, type)
+	end
+end
+--[[
+ * Initialize this Notifier instance.
+ * 
+ * This is how a Notifier gets its multitonKey. 
+ * Calls to #sendNotification or to access the
+ * facade will fail until after this method 
+ * has been called.
+ * 
+ * Mediators, Commands or Proxies may override 
+ * this method in order to send notifications
+ * or access the Multiton Facade instance as
+ * soon as possible. They CANNOT access the facade
+ * in their constructors, since this method will not
+ * yet have been called.
+ * 
+ *
+ * @param {string} key
+ *  The Notifiers multiton key;
+ * @return {void}
+]]
+function Notifier:initializeNotifier(key)
+	self.multitonKey = key
+	self.facade = self:getFacade()
+end
+--[[
+ * Retrieve the Multiton Facade instance
+ *
+ *
+ * @protected
+ * @return {puremvc.Facade}
+]]
+function Notifier:getFacade()
+	if self.multitonKey == nil then
+		error(Notifier.MULTITON_MSG)
+	end
+	return Facade.getInstance(self.multitonKey)
+end
+
+Notifier.MULTITON_MSG = "multitonKey for this Notifier not yet initialized!";
+
+return Notifier

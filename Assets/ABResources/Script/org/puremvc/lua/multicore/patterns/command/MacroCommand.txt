@@ -1,0 +1,108 @@
+--[[
+ * @author PureMVC Lua Native Port Sean 
+ * @author Copyright(c) 2006-2012 Futurescale, Inc., Some rights reserved.
+ * 
+ * @class puremvc.MacroCommand
+ * @extends puremvc.Notifier
+ * 
+ * A base command implementation that executes other commands, such as
+ * {@link puremvc.SimpleCommand SimpleCommand} 
+ * or {@link puremvc.MacroCommand MacroCommand}
+ * subclasses.
+ * 一个基础的命令实现用来执行其他命令，比如SimpleCommand或MacroCommand子类。
+ *  
+ * A MacroCommand maintains an list of
+ * command constructor references called *SubCommands*.
+ * MacroCommand维护一个名为“SubCommands”的命令构造函数引用的列表
+ * 
+ * When #execute is called, the MacroCommand
+ * instantiates and calls #execute on each of its *SubCommands* in turn.
+ * Each *SubCommand* will be passed a reference to the original
+ * {@link puremvc.Notification Notification} 
+ * that was passed to the MacroCommands #execute method
+ * 当execute被执行调用的时候，MatroCommand将会依次对每个子“Commands”实例化并调用#execute，
+ * 每个“SubCommand”将会被传递一个最开始传递到MacroCommands的#execute的引用
+ * 
+ * Unlike {@link puremvc.SimpleCommand SimpleCommand}, 
+ * your subclass should not override #execute but instead, should 
+ * override the #initializeMacroCommand method, calling #addSubCommand once for 
+ * each *SubCommand* to be executed.
+ * 和SimpleCommand不同,你的子类不应该重载execute函数，替代的是应该重写initializeMacroCommand函数，
+ * 为每个“SubCommand”执行一次调用addSubCommand
+ * 
+ * If your subclass does define a constructor, be sure to call "super" like so
+ * 
+ *     function MyMacroCommand ()
+ *     {
+ *         MacroCommand.call(this);
+ *     };
+ * 如果你的子类定义了构造函数，那么一定要像这样调用父类“Spuer”接口
+ * @constructor
+]]
+local Notifier = import('..observer.Notifier')
+local MacroCommand = class('MacroCommand', Notifier)
+
+function MacroCommand:ctor()
+    MacroCommand.super.ctor(self)
+    self.subCommands = {}
+    self:initializeMacroCommand()
+end
+--[[
+ * @protected
+ * Initialize the MacroCommand.
+ * 初始化MacroCommand
+ * 
+ * In your subclass, override this method to 
+ * initialize the MacroCommand's *SubCommand*  
+ * list with command class references like 
+ * this:
+ * 在你的子类中，重写这个方法来初始化MacroCommand的SubCommand列表，
+ * 这样命令类的引用就像这样
+ * 
+ *     // Initialize MyMacroCommand
+ *     MyMacroCommand.prototype.initializeMacroCommand= function ()
+ *     {
+ *         this.addSubCommand( com.me.myapp.controller.FirstCommand );
+ *         this.addSubCommand( com.me.myapp.controller.SecondCommand );
+ *         this.addSubCommand( com.me.myapp.controller.ThirdCommand );
+ *     };
+ * 
+ * Note that *SubCommand*s may be any command implementor,
+ * MacroCommands or SimpleCommands are both acceptable.
+ * 注意“SubCommand”可能是任何命令实现者，MacroCommands或SimpleCommands都可以接受
+ * @return {void}
+]]
+function MacroCommand:initializeMacroCommand() end
+
+--[[
+ * @protected
+ * Add a *SubCommand*
+ * 
+ * The *SubCommand*s will be called in First In / First Out (FIFO) order
+ * “SubCommand”的顺序遵循先进先出的规则
+ * @param {Function} commandClassRef
+ *  A reference to a subclassed SimpleCommand or MacroCommand constructor
+ * 对子类SimpleCommand或MacroCommand构造函数的引用
+]]
+function MacroCommand:addSubCommand(commandClassRef)
+	table.insert(self.subCommands, commandClassRef)
+end
+
+--[[
+ * Execute this MacroCommands *SubCommands*
+ * 
+ * The *SubCommand*s will be called in First In / First Out (FIFO) order
+ * @param {puremvc.Notification} note
+ *  The Notification object to be passed to each *SubCommand*
+]]
+function MacroCommand:execute(note)
+    -- SIC- TODO optimize
+    while(#self.subCommands > 0) do
+        local ref= table.remove(self.subCommands,1)
+        local cmd= ref.new()
+        cmd:initializeNotifier(self.multitonKey)
+        cmd:execute(note)
+    end
+end
+
+return MacroCommand

@@ -1,0 +1,264 @@
+--[[
+ * @author PureMVC Lua Native Port by Sean 
+ * @author Copyright(c) 2006-2012 Futurescale, Inc., Some rights reserved.
+ * 
+ * @class puremvc.View
+ * 
+ * A Multiton View implementation.
+ * 一个多例View的实现
+ * 
+ * In PureMVC, the View class assumes these responsibilities
+ * 在PureMVC里，这个View类承担以下这些职责：
+ * 
+ * - Maintain a cache of {@link puremvc.Mediator Mediator}
+ *   instances.
+ * - 持有一个中介者的缓存
+ * 
+ * - Provide methods for registering, retrieving, and removing 
+ *   {@link puremvc.Mediator Mediator}.
+ * - 提供中介者的注册，获取和移除方法
+ * 
+ * - Notifiying {@link puremvc.Mediator Mediator} when they are registered or 
+ *   removed.
+ * - 当注册或者移除中介者的时候进行通知
+ * 
+ * - Managing the observer lists for each {@link puremvc.Notification Notification}  
+ *   in the application.
+ * - 在应用中管理每个通知的观察者列表
+ * 
+ * - Providing a method for attaching {@link puremvc.Observer Observer} to an 
+ *   {@link puremvc.Notification Notification}'s observer list.
+ * - 提供一个方法把观察者添加到一个通知的观察者列表里
+ *
+ * - Providing a method for broadcasting a {@link puremvc.Notification Notification}.
+ * - 提供一个方法广播这个通知
+ * 
+ * - Notifying the {@link puremvc.Observer Observer}s of a given 
+ *   {@link puremvc.Notification Notification} when it broadcast.
+ * - 当给定的通知进行广播的时候通知相应的观察者 
+ *
+ * This View implementation is a Multiton, so you should not call the 
+ * constructor directly, but instead call the static Multiton 
+ * Factory #getInstance method.
+ * 这个View实现是多例的，所以你不应该直接调用它的构造器，而应该相应的调用它的静态工厂方法的单例接口
+ * 
+ * @param {string} key
+ * @constructor
+ * @throws {Error} 
+ *  if instance for this Multiton key has already been constructed
+]]
+local Observer = import('..patterns.observer.Observer')
+local View = class('View')
+
+function View:ctor(key)
+	if View.instanceMap[key] ~= nil then
+		error(View.MULTITON_MSG)
+	end
+	self.multitonKey = key
+	View.instanceMap[self.multitonKey] = self
+	self.mediatorMap = {}
+	self.observerMap = {}
+	self:initializeView()
+end
+--[[
+ * @protected
+ * Initialize the Singleton View instance
+ * 初始化单例View的实例
+ * 
+ * Called automatically by the constructor, this is your opportunity to
+ * initialize the Singleton instance in your subclass without overriding the
+ * constructor
+ * 会被构造器自动调用，如果没有重载构造器，那么这里将是你的子类进行初始化单例实例的一个机会
+ * 
+ * @return {void}
+]]
+function View:initializeView() end
+--[[
+ * View Singleton Factory method.
+ * Note that this method will return null if supplied a null 
+ * or undefined multiton key.
+ * View单例工厂方法
+ * 注意如果应用了一个Null或者未定义的多例key，那么这个方法将会返回Null
+ *  
+ * @return {puremvc.View}
+ *  The Singleton instance of View
+]]
+function View.getInstance(key)
+	if nil == key then
+		return nil
+	end
+	if View.instanceMap[key] == nil then
+		return View.new(key)
+	else
+		return View.instanceMap[key]		
+	end
+end
+--[[
+ * Register an Observer to be notified of Notifications with a given name
+ * 用一个给定的名字注册一个观察者绑定到通知上
+ * 
+ * @param {string} notificationName
+ *  The name of the Notifications to notify this Observer of
+ * 需要通知到这个观察者的通知名称
+ * @param {puremvc.Observer} observer
+ *  The Observer to register.
+ * 需要注册的观察者
+ * @return {void}
+]]
+function View:registerObserver(notificationName, observer)
+	if self.observerMap[notificationName] ~= nil then
+		table.insert(self.observerMap[notificationName], observer)
+	else
+		self.observerMap[notificationName] = {observer}
+	end
+end
+--[[
+ * Notify the Observers for a particular Notification.
+ * 通知指定的通知对应的观察者们
+ * 
+ * All previously attached Observers for this Notification's
+ * list are notified and are passed a reference to the INotification in 
+ * the order in which they were registered. 
+ * 所有事先关联到这个通知上的观察者都将被通知到并且会传递一个他们注册的通知引用
+ *
+ * @param {puremvc.Notification} notification
+ *  The Notification to notify Observers of
+ * 这个通知指定观察者
+ * @return {void}
+]]
+function View:notifyObservers(notification)
+	if self.observerMap[notification:getName()] ~= nil then
+		local observers_ref = self.observerMap[notification:getName()]
+		for _, o in pairs(observers_ref) do
+			o:notifyObserver(notification)
+		end
+	end
+end
+--[[
+ * Remove the Observer for a given notifyContext from an observer list for
+ * a given Notification name
+ * 移除给定通知名称相关给定通知文本的观察者列表中的观察者 
+ * 
+ * @param {string} notificationName
+ *  Which observer list to remove from
+ * @param {Object} notifyContext
+ *  Remove the Observer with this object as its notifyContext
+ * @return {void}
+ ]]
+ function View:removeObserver(notificationName, notifyContext)
+ 	local observers = self.observerMap[notificationName]
+ 	for _, o in pairs(observers) do
+ 		if o:compareNotifyContext(notifyContext) then
+ 			table.remove(observers, _)
+ 			break
+ 		end
+ 	end
+
+ 	if #observers == 0 then
+ 		self.observerMap[notificationName] = nil
+ 	end
+ end
+--[[
+ * Register a Mediator instance with the View.
+ * 注册一个Mediator的实例
+ * 
+ * Registers the Mediator so that it can be retrieved by name,
+ * and further interrogates the Mediator for its 
+ * {@link puremvc.Mediator#listNotificationInterests interests}.
+ * 注册一个Meditotr以便它可以被使用名字获取到，更多的是查询这个中介
+ *
+ * If the Mediator returns any Notification
+ * names to be notified about, an Observer is created encapsulating 
+ * the Mediator instance's 
+ * {@link puremvc.Mediator#handleNotification handleNotification}
+ * method and registering it as an Observer for all Notifications the 
+ * Mediator is interested in.
+ * 如果这个Mediator返回了一些要被通知的通知名称，一个观察者被创建进行封装这个中介者实例
+ * 
+ * @param {puremvc.Mediator} 
+ *  a reference to the Mediator instance
+]]
+function View:registerMediator(mediator)
+	if self.mediatorMap[mediator:getMediatorName()] ~= nil then
+		return
+	end
+	mediator:initializeNotifier(self.multitonKey)
+	self.mediatorMap[mediator:getMediatorName()] = mediator
+	local interests = mediator:listNotificationInterests()
+	if #interests > 0 then
+		local observer = Observer.new(mediator.handleNotification, mediator)
+		for _, i in pairs(interests) do
+			self:registerObserver(i, observer)
+		end
+	end
+	mediator:onRegister()
+end
+--[[
+ * Retrieve a Mediator from the View
+ * 
+ * @param {string} mediatorName
+ *  The name of the Mediator instance to retrieve
+ * @return {puremvc.Mediator}
+ *  The Mediator instance previously registered with the given mediatorName
+]]
+function View:retrieveMediator(mediatorName)
+	return self.mediatorMap[mediatorName]
+end
+--[[
+ * Remove a Mediator from the View.
+ * 
+ * @param {string} mediatorName
+ *  Name of the Mediator instance to be removed
+ * @return {puremvc.Mediator}
+ *  The Mediator that was removed from the View
+]]
+function View:removeMediator(mediatorName)
+	local mediator = self.mediatorMap[mediatorName]
+	if mediator ~= nil then
+		local interests = mediator:listNotificationInterests()
+		for _, i in pairs(interests) do
+			self:removeObserver(i, mediator)
+		end
+		self.mediatorMap[mediatorName] = nil
+		mediator:onRemove()
+	end
+	return mediator
+end
+--[[
+ * Check if a Mediator is registered or not.
+ * 
+ * @param {string} mediatorName
+ * @return {boolean}
+ *  Whether a Mediator is registered with the given mediatorname
+ ]]
+function View:hasMediator(mediatorName)
+	return self.mediatorMap[mediatorName] ~= nil
+end
+--[[
+ * Remove a View instance
+ * 
+ * @return {void}
+]]
+function View.removeView(key)
+	View.instanceMap[key] = nil
+end
+--[[
+ * @ignore
+ * The internal map used to store multiton View instances
+ *
+ * @type Array
+ * @protected
+]]
+View.instanceMap = {}
+--[[
+ * @ignore
+ * The error message used if an attempt is made to instantiate View directly
+ *
+ * @type string
+ * @protected
+ * @const
+ * @static
+]]
+View.MULTITON_MSG = "View instance for this Multiton key already constructed!"
+
+return View

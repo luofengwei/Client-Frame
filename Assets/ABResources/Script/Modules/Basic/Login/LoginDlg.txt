@@ -1,0 +1,71 @@
+local LoginDlg = class("LoginDlg",CDlgBase)
+autoImport("LoginPanel")
+
+function LoginDlg:ctor()
+	-- body
+	LoginDlg.super.ctor(self,DlgEnum.Login)
+
+	LoginPanel.new()
+	self.gui = LoginPanel.Instance
+	self.bShow = false
+end
+
+function LoginDlg:show()
+	-- body
+	if self.bShow == true then
+		return
+	end
+	self.gui:OpenPanel()
+	self.bShow = true
+
+	self:init()
+end
+
+function LoginDlg:init()
+	-- body
+	TimeTickManager.Instance:CreateTick(100,1000,self.hidePreLoadingUI,self,1003)
+
+	self:initData()
+	self:initShow()
+	self:AddEvts()
+end
+
+function LoginDlg:initData()
+	-- body
+	for k,v in pairs(Lua_Table.Table_Items) do
+		print(v.Name)
+	end	
+end
+
+function LoginDlg:initShow()
+	-- body
+	GameObjectUtils.MovieShow(self.gui.moviePlayer.gameObject,"Movie/Head/ly.mp4",true)
+end
+
+function LoginDlg:AddEvts()
+	-- body
+	print("AddEvts..LoginDlg........")
+	self.gui.LoginTips.text = "请注意一下变更1"
+	self.gui.LoginBtnListener.onClick = function(go)
+		-- body
+		self.gui.LoginTips.text = "请注意一下变更2"
+	end
+end
+
+function LoginDlg:close()
+	-- body
+	if self.bShow == false then
+		return
+	end
+
+	self.gui:ClosePanel()
+	self.bShow = false
+end
+
+function LoginDlg:hidePreLoadingUI()
+	-- body
+	GameSysManager.ClosePreLoadingUI()
+	TimeTickManager.Instance:ClearTick(self,1003)
+end
+
+return LoginDlg

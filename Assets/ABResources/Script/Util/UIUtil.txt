@@ -1,0 +1,10 @@
+UIUtil = {}
+
+function UIUtil.DirectFind(name,parent)
+	-- body
+	if parent == nil then
+		return nil
+	else
+		return GameObjectUtils.DirectFind(name,parent)
+	end
+end

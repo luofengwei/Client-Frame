@@ -1,0 +1,4 @@
+abresources/script.unity3d
+abresources/tableconfig.unity3d
+abresources/gameconfig.unity3d
+abresources/ui/uiroot.unity3d

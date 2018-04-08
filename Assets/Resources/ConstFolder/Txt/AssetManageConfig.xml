@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssetManageConfigFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">	
+	<infos>
+    <AssetManageInfo Path="ABResources/Scenes" ManageBundleMode="UnLoadImmediately" LoadType="Scene" Encryption="None" DelayDelTime="0" LimitCount = "6" />
+    <AssetManageInfo Path="ABResources/Animation" ManageBundleMode="UnLoadImmediately" LoadType="Animation" Encryption="None" DelayDelTime="0" LimitCount = "6" />       
+		<AssetManageInfo Path="ABResources/Avatar" ManageBundleMode="UnLoadImmediately" LoadType="Avatar" Encryption="None" DelayDelTime="0" LimitCount = "6" />   
+		<AssetManageInfo Path="ABResources/Effect" ManageBundleMode="UnLoadImmediately" LoadType="Effect" Encryption="None" DelayDelTime="60" LimitCount = "12" />   
+		<AssetManageInfo Path="ABResources/Icon" ManageBundleMode="UnLoadImmediately" LoadType="Icon" Encryption="None" DelayDelTime="0" LimitCount = "6" />   
+		<AssetManageInfo Path="ABResources/MatchRes" ManageBundleMode="UnLoadImmediately" LoadType="Model" Encryption="None" DelayDelTime="0" LimitCount = "6" />   	
+		<AssetManageInfo Path="ABResources/UI" ManageBundleMode="UnLoadImmediately" LoadType="UI" Encryption="None" DelayDelTime="0" LimitCount = "6" />   
+		<AssetManageInfo Path="ABResources/Sound/Sound" ManageBundleMode="UnLoadImmediately" LoadType="Sound" Encryption="None" Group="true" DelayDelTime="60" LimitCount = "6" />   
+		<AssetManageInfo Path="ABResources/Sound/Music" ManageBundleMode="UnLoadImmediately" LoadType="Music" Encryption="None" DelayDelTime="5" LimitCount = "6" />     
+		
+		<AssetManageInfo Path="Resources/Font" ManageBundleMode="UnLoadImmediately" LoadType="Font" Encryption="None" DelayDelTime="0" LimitCount = "6" />   
+		<AssetManageInfo Path="Resources/Shaders" ManageBundleMode="UnLoadImmediately" LoadType="Shader" Encryption="None" DelayDelTime="0" LimitCount = "6" />   	
+		<AssetManageInfo Path="Resources/ShaderVariant" ManageBundleMode="UnLoadImmediately" LoadType="ShaderVariant" Encryption="None" DelayDelTime="0" LimitCount = "6" />
+
+    <AssetManageInfo Path="ABResources/Spine2D" ManageBundleMode="UnLoadImmediately" LoadType="Spine2D" Encryption="None" DelayDelTime="0" LimitCount = "6" />
+    <AssetManageInfo Path="ABResources/TableConfig" ManageBundleMode="UnLoadImmediately" LoadType="TableConfig" Encryption="AES1" DelayDelTime="0" LimitCount = "6" />
+    <AssetManageInfo Path="ABResources/Script" ManageBundleMode="UnLoadImmediately" LoadType="LuaScript" Encryption="AES1" DelayDelTime="0" LimitCount = "6" />
+    <AssetManageInfo Path="ABResources" ManageBundleMode="UnLoadImmediately" LoadType="Config" Encryption="None" DelayDelTime="0" LimitCount = "6" />   	
+	  </infos>
+</AssetManageConfigFile>

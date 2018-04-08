@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PathID2Name xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="-1" name="">
+  <children>
+    <PathID2Name id="-1" name="Script">
+      <children>
+        <PathID2Name id="-1" name="FrameWork">
+          <children>
+            <PathID2Name id="-1" name="Event">
+              <children>
+                <PathID2Name id="-1" name="EventDispatcher">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="EventStr">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+            <PathID2Name id="-1" name="prep">
+              <children>
+                <PathID2Name id="-1" name="PrepDataProxyCommand">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="StartUpCommand">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+            <PathID2Name id="-1" name="proxy">
+              <children>
+                <PathID2Name id="-1" name="UIManagerProxy">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+            <PathID2Name id="-1" name="xGUI">
+              <children>
+                <PathID2Name id="-1" name="CDlgBase">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="CDlgMgr">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="DlgEnum">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+          </children>
+        </PathID2Name>
+        <PathID2Name id="-1" name="Main">
+          <children>
+            <PathID2Name id="-1" name="FilePath">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="GameMain">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="Import">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="init">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="Main">
+              <children />
+            </PathID2Name>
+          </children>
+        </PathID2Name>
+        <PathID2Name id="-1" name="Modules">
+          <children>
+            <PathID2Name id="-1" name="Basic">
+              <children>
+                <PathID2Name id="-1" name="Login">
+                  <children>
+                    <PathID2Name id="-1" name="LoginDlg">
+                      <children />
+                    </PathID2Name>
+                    <PathID2Name id="-1" name="LoginPanel">
+                      <children />
+                    </PathID2Name>
+                    <PathID2Name id="-1" name="LoginProxy">
+                      <children />
+                    </PathID2Name>
+                  </children>
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+            <PathID2Name id="-1" name="Other">
+              <children>
+                <PathID2Name id="-1" name="BridgingClass">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="SceneSwitchState">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+          </children>
+        </PathID2Name>
+        <PathID2Name id="-1" name="org">
+          <children>
+            <PathID2Name id="-1" name="puremvc">
+              <children>
+                <PathID2Name id="-1" name="lua">
+                  <children>
+                    <PathID2Name id="-1" name="multicore">
+                      <children>
+                        <PathID2Name id="-1" name="core">
+                          <children>
+                            <PathID2Name id="-1" name="Controller">
+                              <children />
+                            </PathID2Name>
+                            <PathID2Name id="-1" name="Model">
+                              <children />
+                            </PathID2Name>
+                            <PathID2Name id="-1" name="View">
+                              <children />
+                            </PathID2Name>
+                          </children>
+                        </PathID2Name>
+                        <PathID2Name id="-1" name="help">
+                          <children>
+                            <PathID2Name id="-1" name="oop">
+                              <children />
+                            </PathID2Name>
+                          </children>
+                        </PathID2Name>
+                        <PathID2Name id="-1" name="patterns">
+                          <children>
+                            <PathID2Name id="-1" name="command">
+                              <children>
+                                <PathID2Name id="-1" name="MacroCommand">
+                                  <children />
+                                </PathID2Name>
+                                <PathID2Name id="-1" name="SimpleCommand">
+                                  <children />
+                                </PathID2Name>
+                              </children>
+                            </PathID2Name>
+                            <PathID2Name id="-1" name="facade">
+                              <children>
+                                <PathID2Name id="-1" name="Facade">
+                                  <children />
+                                </PathID2Name>
+                              </children>
+                            </PathID2Name>
+                            <PathID2Name id="-1" name="mediator">
+                              <children>
+                                <PathID2Name id="-1" name="Mediator">
+                                  <children />
+                                </PathID2Name>
+                              </children>
+                            </PathID2Name>
+                            <PathID2Name id="-1" name="observer">
+                              <children>
+                                <PathID2Name id="-1" name="Notification">
+                                  <children />
+                                </PathID2Name>
+                                <PathID2Name id="-1" name="Notifier">
+                                  <children />
+                                </PathID2Name>
+                                <PathID2Name id="-1" name="Observer">
+                                  <children />
+                                </PathID2Name>
+                              </children>
+                            </PathID2Name>
+                            <PathID2Name id="-1" name="proxy">
+                              <children>
+                                <PathID2Name id="-1" name="Proxy">
+                                  <children />
+                                </PathID2Name>
+                              </children>
+                            </PathID2Name>
+                          </children>
+                        </PathID2Name>
+                      </children>
+                    </PathID2Name>
+                  </children>
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+          </children>
+        </PathID2Name>
+        <PathID2Name id="-1" name="Refactory">
+          <children>
+            <PathID2Name id="-1" name="Tools">
+              <children>
+                <PathID2Name id="-1" name="json">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="LuaMemory">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+          </children>
+        </PathID2Name>
+        <PathID2Name id="-1" name="Util">
+          <children>
+            <PathID2Name id="-1" name="IOUtil">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="TableUtil">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="UIUtil">
+              <children />
+            </PathID2Name>
+            <PathID2Name id="-1" name="Time">
+              <children>
+                <PathID2Name id="-1" name="TimeTick">
+                  <children />
+                </PathID2Name>
+                <PathID2Name id="-1" name="TimeTickManager">
+                  <children />
+                </PathID2Name>
+              </children>
+            </PathID2Name>
+          </children>
+        </PathID2Name>
+      </children>
+    </PathID2Name>
+  </children>
+</PathID2Name>

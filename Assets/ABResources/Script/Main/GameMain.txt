@@ -1,0 +1,10 @@
+
+--桥接C#类
+autoImport("BridgingClass")
+autoImport("SceneSwitchState")
+autoImport("TimeTickManager")
+autoImport("DlgEnum")
+autoImport("UIUtil")
+
+CDlgBase = autoImport("CDlgBase")
+LoginDlg = autoImport("LoginDlg")

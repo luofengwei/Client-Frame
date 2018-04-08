@@ -1,0 +1,113 @@
+--[[
+ * @author PureMVC Lua Native Port by Sean 
+ * @author Copyright(c) 2006-2012 Futurescale, Inc., Some rights reserved.
+ * 
+ * @class puremvc.Notification
+ * 
+ * A base Notification implementation.
+ * 一个基本的Notification实现
+ * 
+ * PureMVC does not rely upon underlying event models such as the one provided 
+ * with the DOM or other browser centric W3C event models.
+ * PureMVC不依赖与底层事件模型，如DOM或其他浏览器内核提供的事件模型
+ * 
+ * The Observer Pattern as implemented within PureMVC exists to support 
+ * event-driven communication between the application and the actors of the MVC 
+ * triad.
+ * PureMVC里实现的观察者模式支持应用和MCV三元组的Actors之间进行事件驱动交流
+ * 
+ * Notifications are not meant to be a replacement for events in the browser. 
+ * Generally, Mediator implementors place event listeners on their view 
+ * components, which they then handle in the usual way. This may lead to the 
+ * broadcast of Notifications to trigger commands or to communicate with other 
+ * Mediators. {@link puremvc.Proxy Proxy},
+ * {@link puremvc.SimpleCommand SimpleCommand}
+ * and {@link puremvc.MacroCommand MacroCommand}
+ * instances communicate with each other and 
+ * {@link puremvc.Mediator Mediator}s
+ * by broadcasting Notifications.
+ * Notifications不意味着可以代替浏览器中的事件。通常，Mediator实现者将事件侦听器放在他们的View视图上，
+ * 用来以他们常规的方式处理。这可能导致Notifications的广播通知触发命令或者与其他的Mediators中介者进行通信。
+ * 
+ * A key difference between browser events and PureMVC Notifications is that
+ * events follow the 'Chain of Responsibility' pattern, 'bubbling' up the 
+ * display hierarchy until some parent component handles the event, while 
+ * PureMVC Notification follow a 'Publish/Subscribe' pattern. PureMVC classes 
+ * need not be related to each other in a parent/child relationship in order to 
+ * communicate with one another using Notifications.
+ * 浏览器事件和PureMCV-Notifications之间的关键区域在于事件遵守的是“责任链”模式，在特定层级结构中“冒泡”，
+ * 直到某些父组件处理事件，而PureMVC-Notification遵循“发布/订阅”模式。PureMVC类使用Notifications进行彼此
+ * 通讯不依赖于各自的父子关系。
+ * 
+ * @constructor 
+ * @param {string} name
+ *  The Notification name
+ * @param {Object} [body]
+ *  The Notification body
+ * @param {Object} [type]
+ *  The Notification type
+ * Notification的名称，本体和类型
+]]
+local Notification = class("Notification")
+
+function Notification:ctor(name, body, type)
+	self.name = name
+	self.body = body
+	self.type = type
+end
+--[[
+ * Get the name of the Notification instance
+ *
+ * @return {string}
+ *  The name of the Notification instance
+]]
+function Notification:getName()
+	return self.name
+end
+--[[
+ * Set this Notifications body. 
+ * @param {Object} body
+ * @return {void}
+]]
+function Notification:setBody(body)
+	self.body = body
+end
+--[[
+ * Get the Notification body.
+ *
+ * @return {Object}
+]]
+function Notification:getBody()
+	return self.body
+end
+--[[
+ * Set the type of the Notification instance.
+ *
+ * @param {Object} type
+ * @return {void}
+]]
+function Notification:setType(type)
+	self.type = type
+end
+--[[
+ * Get the type of the Notification instance.
+ * 
+ * @return {Object}
+]]
+function Notification:getType()
+	return self.type
+end
+--[[
+ * Get a string representation of the Notification instance
+ *
+ * 获得Notification的名称/本体/类型的描述
+ * @return {string}
+]]
+function Notification:toString()
+	local msg = "Notification Name: " .. self:getName()
+	msg = msg .. "\nBody: " .. tostring(self:getBody())
+	msg = msg .. "\nType: " .. self:getType()
+	return msg
+end
+
+return Notification

@@ -1,0 +1,61 @@
+local TimeTickManager = class("TimeTickManager",pm.Proxy)
+autoImport("TimeTick")
+
+function TimeTickManager:ctor()
+	self.proxyName = "TimeTickManager"
+	if TimeTickManager.Instance == nil then
+		TimeTickManager.Instance = self
+	end
+	self.timeTickMap = {}
+end
+
+--delay延迟时间 ,interval频率ms ,func回调,owner回调的所有者,id标识（可防止重复tick）
+function TimeTickManager:CreateTick(delay,interval,func,owner,id,rawSecond)
+	id = id or 1
+	local ownerTicks = self.timeTickMap[owner]
+	if(ownerTicks==nil) then
+		ownerTicks = {}
+		self.timeTickMap[owner] = ownerTicks
+	end
+	local tick = ownerTicks[id]
+	if(tick==nil) then
+		tick = TimeTick.new(delay,interval,func,owner,id,rawSecond)
+		ownerTicks[id] = tick
+	else
+		tick:ResetData( delay,interval,func,owner,id ,rawSecond)
+	end
+	tick:Restart()
+	return tick
+end
+
+function TimeTickManager:ClearTick(owner,id)
+	local ownerTicks = self.timeTickMap[owner]
+	if(ownerTicks~=nil) then
+		if(id~=nil) then
+			local tick = ownerTicks[id]
+			if(tick~=nil) then
+				tick:ClearTick()
+				tick = nil
+				ownerTicks[id] = nil			
+			end
+		else
+			for id,tick in pairs(ownerTicks) do
+				tick:ClearTick()
+				tick = nil
+			end
+			 self.timeTickMap[owner]={}
+		end
+	end
+end
+
+function TimeTickManager:ClearAll()
+	for owner,ticks in pairs(self.timeTickMap) do
+		for id,tick in pairs(ticks) do
+			tick:ClearTick()
+			tick = nil
+		end
+	end
+	self.timeTickMap = {}
+end
+
+return TimeTickManager

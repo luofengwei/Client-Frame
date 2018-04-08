@@ -1,0 +1,58 @@
+LoginPanel = class("LoginPanel")
+LoginPanel.Instance = nil
+
+function LoginPanel:ctor()
+	-- body
+	if LoginPanel.Instance == nil then
+		LoginPanel.Instance = self
+	end
+end
+
+function LoginPanel:OpenPanel()
+	-- body
+	if self.gameObject == nil then
+		self.gameObject = ResourceManager.Instance:RGet("loginuipanel","loginuipanel",ELoadType.UI)
+	end
+	self.gameObject.transform:SetParent(UIManagerProxy.Instance.UIRoot.transform,false)
+	self:Init()
+end
+
+function LoginPanel:ClosePanel()
+	if self.moviePlayer ~= nil then
+		GameObjectUtils.StopMovieShow(self.moviePlayer.gameObject)
+	end
+
+	-- body
+	if self.gameObject ~= nil then
+		ResourceManager.Instance:UnLoad(self.gameObject,false)
+		self.gameObject = nil
+	end
+
+end
+
+function LoginPanel:Init()
+	-- body
+	self:FindObjs()
+end
+
+function LoginPanel:DirectFind(path,gameObject)
+	-- body
+	if gameObject ~= nil then
+		return UIUtil.DirectFind(path,gameObject)
+	else
+		return UIUtil.DirectFind(path,self.gameObject)
+	end
+end
+
+function LoginPanel:FindObjs()
+	-- body
+	self.LoginTipsObj = self:DirectFind("ActivePanel/LoginTips")
+	self.LoginTips = self.LoginTipsObj:GetComponent(UILabel)
+
+	self.LoginBtnObj = self:DirectFind("ActivePanel/LoginBtn")
+	self.LoginBtnListener = self.LoginBtnObj:GetComponent(UIEventListener)
+
+	self.movieFrame = self:DirectFind("ActivePanel/MovieFrame")
+	self.moviePlayer = self:DirectFind("MoviePlayer",self.movieFrame)
+	self.movieTexture = self:DirectFind("MovieTexture",self.movieFrame):GetComponent(UITexture)
+end

@@ -1,0 +1,20 @@
+SceneSwitchState = {}
+
+function SceneSwitchState.PreSwitchState(newState,curState)
+	-- body
+	print("PreSwitchState.."..newState.."/"..curState)
+end
+
+function SceneSwitchState.SwitchState(newState,curState)
+	-- body
+	print("SwitchState.."..newState.."/"..curState)
+end
+
+function SceneSwitchState.PostSwitchState(newState,curState)
+	-- body
+	print("PostSwitchState.."..newState.."/"..curState)
+
+	if curState == EStateType.None then
+		CDlgMgr.Instance:fetchAndShowDlg(DlgEnum.Login)
+	end
+end

@@ -1,0 +1,146 @@
+
+bike_f.png
+size: 267,141
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bike02
+  rotate: true
+  xy: 255, 126
+  size: 13, 6
+  orig: 13, 6
+  offset: 0, 0
+  index: -1
+bike03
+  rotate: false
+  xy: 255, 112
+  size: 6, 12
+  orig: 6, 12
+  offset: 0, 0
+  index: -1
+bike04
+  rotate: false
+  xy: 193, 24
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: -1
+bike05
+  rotate: false
+  xy: 158, 30
+  size: 33, 23
+  orig: 33, 23
+  offset: 0, 0
+  index: -1
+bike06
+  rotate: false
+  xy: 2, 82
+  size: 98, 57
+  orig: 98, 57
+  offset: 0, 0
+  index: -1
+bike07
+  rotate: false
+  xy: 80, 11
+  size: 32, 25
+  orig: 32, 25
+  offset: 0, 0
+  index: -1
+bike08
+  rotate: false
+  xy: 2, 6
+  size: 76, 33
+  orig: 76, 33
+  offset: 0, 0
+  index: -1
+bike09
+  rotate: false
+  xy: 81, 38
+  size: 30, 42
+  orig: 30, 42
+  offset: 0, 0
+  index: -1
+bike10
+  rotate: true
+  xy: 114, 16
+  size: 23, 35
+  orig: 23, 35
+  offset: 0, 0
+  index: -1
+bike11
+  rotate: true
+  xy: 151, 10
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: -1
+bike12
+  rotate: true
+  xy: 163, 55
+  size: 38, 49
+  orig: 38, 49
+  offset: 0, 0
+  index: -1
+bike13
+  rotate: true
+  xy: 182, 2
+  size: 18, 24
+  orig: 18, 24
+  offset: 0, 0
+  index: -1
+bike14
+  rotate: true
+  xy: 248, 19
+  size: 28, 17
+  orig: 28, 17
+  offset: 0, 0
+  index: -1
+bike15
+  rotate: false
+  xy: 102, 87
+  size: 59, 52
+  orig: 59, 52
+  offset: 0, 0
+  index: -1
+bike16
+  rotate: false
+  xy: 2, 41
+  size: 77, 39
+  orig: 77, 39
+  offset: 0, 0
+  index: -1
+bike17
+  rotate: true
+  xy: 213, 22
+  size: 25, 33
+  orig: 25, 33
+  offset: 0, 0
+  index: -1
+lun1_1
+  rotate: false
+  xy: 113, 41
+  size: 43, 44
+  orig: 43, 44
+  offset: 0, 0
+  index: -1
+lun1_2
+  rotate: false
+  xy: 214, 49
+  size: 43, 44
+  orig: 43, 44
+  offset: 0, 0
+  index: -1
+lun2_1
+  rotate: false
+  xy: 163, 95
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
+lun2_2
+  rotate: false
+  xy: 209, 95
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1

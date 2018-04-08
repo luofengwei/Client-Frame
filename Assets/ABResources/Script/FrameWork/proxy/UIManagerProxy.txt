@@ -1,0 +1,14 @@
+UIManagerProxy = class("UIManagerProxy",pm.Proxy)
+UIManagerProxy.Instance = nil
+
+function UIManagerProxy:ctor( ... )
+	self.proxyName = "UIManagerProxy"
+	-- body
+	self.UIRoot = ResourceManager.Instance:RGet("uiroot","uiroot",ELoadType.UI)
+	self.UIRoot.transform.localPosition = Vector3(0,0,0)
+	GameObject.DontDestroyOnLoad(self.UIRoot)
+
+    if UIManagerProxy.Instance == nil then
+    	UIManagerProxy.Instance = self
+    end
+end

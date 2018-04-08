@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: a62255b78e82c1c4f83ee5d53553d104
+timeCreated: 1495243660
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: ShiShangZhongHeiJianTi
+  fontNames:
+  - ShiShangZhongHeiJianTi
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 4ad0df8157faf7545bc62157795e8be4, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,12 @@
+local LoginProxy = class("LoginProxy",pm.Proxy)
+
+LoginProxy.Instance = nil
+function LoginProxy:ctor()
+	-- body
+	self.proxyName = "LoginProxy"
+	if LoginProxy.Instance == nil then
+		LoginProxy.Instance = self
+	end
+end
+
+return LoginProxy

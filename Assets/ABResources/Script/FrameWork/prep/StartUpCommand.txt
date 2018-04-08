@@ -1,0 +1,9 @@
+local StartUpCommand = class("StartUpCommand",pm.MacroCommand)
+local PrepDataProxyCommand = import(".PrepDataProxyCommand")
+
+function StartUpCommand:initializeMacroCommand( ... )
+	-- body
+	self:addSubCommand(PrepDataProxyCommand)
+end
+
+return StartUpCommand

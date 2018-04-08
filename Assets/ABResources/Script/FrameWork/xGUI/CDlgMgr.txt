@@ -1,0 +1,159 @@
+local CDlgMgr = class("CDlgMgr",pm.Proxy)
+
+CDlgMgr.Instance = nil
+function CDlgMgr:ctor()
+	-- body
+	self.proxyName = "CDlgMgr"
+	if CDlgMgr.Instance == nil then
+		CDlgMgr.Instance = self
+	end
+
+	self.dlgs = {}
+end
+
+--获取一个界面的接口，若无则为nil
+function CDlgMgr:getDlg(dlgTag)
+	-- body
+	if self.dlgs[dlgTag] ~= nil then
+		return self.dlgs[dlgTag]
+	else
+		return nil
+	end
+end
+
+--获取一个界面并返回，没有则创建
+function CDlgMgr:fetchDlg(dlgTag)
+	-- body
+	if self.dlgs[dlgTag] ~= nil then
+		return self.dlgs[dlgTag]
+	else
+		return self:_createDlg(dlgTag)
+	end
+end
+
+--关闭一个界面
+function CDlgMgr:closeDlg(dlgTag)
+	local tgtDlg = self:getDlg(dlgTag)
+	if tgtDlg ~= nil then
+		tgtDlg:close()
+		self:_removeDlg(dlgTag)
+	end
+end
+
+--关闭除了指定的dlgTag的界面
+function CDlgMgr:closeAllDlgsExcept(dlgTag)
+	-- body
+	local tgtDlg = nil
+	for k,v in pairs(self.dlgs) do
+		if k ~= dlgTag then
+			tgtDlg = self.dlgs[k]
+			if tgtDlg ~= nil then
+				tgtDlg.close()
+				self.dlgs[k] = nil
+			end
+		end
+	end
+end
+
+--关闭所有的界面
+function CDlgMgr:closeAllDlg()
+	-- body
+	self:closeAllDlgsExcept(nil)
+end
+
+--隐藏一个界面
+function CDlgMgr:hideDlg(dlgTag)
+	local tgtDlg = self:getDlg(dlgTag)
+	if tgtDlg ~= nil then
+		tgtDlg:hide()
+	end
+end
+
+--显示一个界面
+function CDlgMgr:showDlg(dlgTag)
+	local tgtDlg = self:getDlg(dlgTag)
+	if tgtDlg ~= nil then
+		tgtDlg:show()
+	end
+end
+
+--获取并显示一个界面
+function CDlgMgr:fetchAndShowDlg(dlgTag)
+	local tgtDlg = self:fetchDlg(dlgTag)
+	if tgtDlg ~= nil then
+		tgtDlg:show()
+	end
+end
+
+--切换显示界面
+function CDlgMgr:toggleDlg(dlgTag)
+	local tgtDlg = self:getDlg(dlgTag)
+	if tgtDlg == nil then
+		return
+	else
+		tgtDlg:toggleVisible()
+	end
+end
+
+--切换显示界面，隐藏
+function CDlgMgr:toggleDlgByHide(dlgTag)
+	local tgtDlg = self:getDlg(dlgTag)
+	if tgtDlg == nil then
+		return
+	elseif tgtDlg.isVisible() then
+		tgtDlg:hide()
+	else
+		tgtDlg:show()
+	end
+end
+
+--切换显示界面，关闭
+function CDlgMgr:toggleDlgByClose(dlgTag)
+	local tgtDlg = self:getDlg(dlgTag)
+	if tgtDlg == nil then
+		return
+	elseif tgtDlg.isVisible() then
+		tgtDlg:close()
+		self:_removeDlg(dlgTag)
+	else
+		tgtDlg:show()
+	end
+end
+
+--更新界面显示
+function CDlgMgr:updateDlgs()
+	-- body
+	local tgtDlg = nil
+	for i = 1,#self.dlgs do
+		tgtDlg = self.dlgs[i]
+		if tgtDlg ~= nil then
+			tgtDlg:update()
+		end
+	end
+end
+
+--创建一个界面并返回的接口
+function CDlgMgr:_createDlg(dlgTag)
+	-- body
+	if dlgTag == nil or dlgTag == "" or dlgTag == DlgEnum.None then
+		return nil
+	end
+    
+	if dlgTag == DlgEnum.Login then
+		self.dlgs[dlgTag] = LoginDlg.new()
+	end
+
+	return self.dlgs[dlgTag]
+end
+
+--移除一个界面
+function CDlgMgr:_removeDlg(dlgTag)
+	-- body
+	if dlgTag == nil or dlgTag == "" then
+		return nil
+	end
+
+	self.dlgs[dlgTag] = nil
+end
+
+return CDlgMgr

@@ -1,0 +1,32 @@
+IOUtil = {}
+
+function IOUtil.Write(path,filename,params)
+	local file = io.open(path.."/"..filename, "w")
+	if file then
+		for k,v in pairs(params) do
+			file:write(v.."\n")
+		end
+		file:close()
+	end
+end
+
+function IOUtil.Read(path,filename)
+	local data = {}
+	local file = nil
+
+	CUtility.CheckFileAndCreate(path,filename)
+	file = io.open(path.."/"..filename, "rb")
+	if file then
+		for line in file:lines() do
+			table.insert(data,line)
+		end
+		file:close()
+	end
+	return data
+end
+
+function IOUtil.CheckFileExisted(path)
+  local file = io.open(path, "rb")
+  if file then file:close() end
+  return file ~= nil
+end

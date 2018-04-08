@@ -1,0 +1,6 @@
+DlgEnum = {}
+
+DlgEnum.None = 0
+DlgEnum.Login = 1
+
+return DlgEnum

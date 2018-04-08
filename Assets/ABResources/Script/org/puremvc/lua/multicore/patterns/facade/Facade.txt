@@ -1,0 +1,466 @@
+--[[
+ * @author PureMVC Lua Native Port by Sean 
+ * @author Copyright(c) 2006-2012 Futurescale, Inc., Some rights reserved.
+ * 
+ * @class puremvc.Facade
+ * Facade exposes the functionality of the Controller, Model and View
+ * 外观模式暴露了MVC的功能
+ * actors to client facing code. 
+ * 面向客户端的代码
+ * 
+ * This Facade implementation is a Multiton, so you should not call the 
+ * 这个外观模式是一个多例，所以你不能直接调用他的构造器。
+ * constructor directly, but instead call the static Factory method,
+ * 但是相应的你可以调用他的静态工厂方法， 并且为他的初始化传入唯一的key
+ * passing the unique key for this instance to #getInstance
+ *
+ * @constructor
+ * @param {string} key
+ * 	The multiton key to use to retrieve the Facade instance.
+ * 这个多例的key用来取回这个外观的单例
+ * @throws {Error} 
+ *  If an attempt is made to instantiate Facade directly
+ * 如果试图直接实例化这个外观将会抛出一个error
+
+ 	主框架类
+]]
+local Controller = import('...core.Controller')
+local Model = import('...core.Model')
+local View = import('...core.View')
+local Notification = import('..observer.Notification')
+
+local Facade = class("Facade")
+
+function Facade:ctor(key)
+	if Facade.instanceMap[key] ~= nil then
+		error(Facade.MULTITON_MSG)
+	end
+	self:initializeNotifier(key)
+	Facade.instanceMap[key] = self
+	self:initializeFacade()
+end
+--[[
+ * Initialize the Multiton Facade instance.
+ * 初始化这个多例外观的单例
+ * 
+ * Called automatically by the constructor. Override in your subclass to any
+ * 被构造器自动调用。可以在你的子类里进行重写以进行如何的子例特殊初始化。
+ * subclass specific initializations. Be sure to call the 'super' 
+ * 不过务必要记得调用父类"super"的初始化函数
+ * initializeFacade method, though
+ * 
+ *     MyFacade.prototype.initializeFacade= function ()
+ *     {
+ *         Facade.call(this);
+ *     };
+ * @protected
+ * @return {void}
+]]
+function Facade:initializeFacade()
+    self:initializeModel();
+    self:initializeController();
+    self:initializeView();	
+end
+--[[
+ * Facade Multiton Factory method. 
+ * 外观模式多例工厂的方式。
+ * Note that this method will return null if supplied a
+ * null or undefined multiton key.
+ * 注意如果传入一个Null或者未定义的多例Key值，这个方法将返回一个null值
+ * 
+ * @param {string} key
+ * 	The multiton key use to retrieve a particular Facade instance
+ *  这个多例key值用于产生获取一个特定的外观实例
+ * @return {puremvc.Facade}
+]]
+function Facade.getInstance(key)
+	if nil == key then
+		return nil
+	end
+	if Facade.instanceMap[key] == nil then
+		Facade.instanceMap[key] = Facade.new(key)
+	end
+	return Facade.instanceMap[key]	
+end
+--[[
+ * Initialize the {@link puremvc.Controller Controller}.
+ * 
+ * Called by the #initializeFacade method.
+ * 被#initializeFacade方法调用
+ * 
+ * Override this method in your subclass of Facade
+ * 在你的外子类里重载这个方法，如果以下的一个或多个情况存在：
+ * if one or both of the following are true:
+
+ * - You wish to initialize a different Controller
+ * - 你想初始化一个特殊的Controller
+ * - You have 
+ * {@link puremvc.SimpleCommand SimpleCommand}s
+ * or {@link puremvc.MacroCommand MacroCommand}s
+ * to register with the Controller at startup.
+ * 你用SimpleCommands或者MacroCommands在开始的时候和这个Controller去注册
+ * 
+ * If you don't want to initialize a different Controller, 
+ * 如果你不想实例化一个特殊的Controller,直接调用父类"super"的初始化方法在你方法的开始，然后再注册commands
+ * call the 'super' initializeControlle method at the beginning of your
+ * method, then register commands.
+ * 
+ *     MyFacade.prototype.initializeController= function ()
+ *     {
+ *         Facade.prototype.initializeController.call(this);
+ *         this.registerCommand(AppConstants.A_NOTE_NAME, ABespokeCommand)
+ *     }
+ * 
+ * @protected
+ * @return {void}
+]]
+function Facade:initializeController()
+	if self.controller ~= nil then
+		return
+	end
+	self.controller = Controller.getInstance(self.multitonKey);
+end
+--[[
+ * @protected
+ * Initialize the {@link puremvc.Model Model};
+ * 
+ * Called by the #initializeFacade method.
+ * 被#initializeFacade方法调用
+ * Override this method in your subclass of Facade if one of the following are
+ * true:
+ * 在你的外观子类里重载这个方法如果有以下的一项为true:
+ * 
+ * - You wish to initialize a different Model.
+ * - 你想初始化一个特殊的Model
+ * 
+ * - You have {@link puremvc.Proxy Proxy}s to 
+ *   register with the Model that do not retrieve a reference to the Facade at 
+ *   construction time.
+ * - 你有一些proxys需要和这个Model一起注册，在构造的时候不需要取回一个外观的引用
+ * 
+ * If you don't want to initialize a different Model
+ * 如果你不想实例化一个特殊的Model
+ * call 'super' #initializeModel at the beginning of your method, then register 
+ * Proxys.
+ * 调用父类"super"的#initializeModel进行实例化在你方法开始的地方，然后再进行Proxy的注册
+ * 
+ * Note: This method is *rarely* overridden; in practice you are more
+ * likely to use a command to create and registerProxys with the Model>, 
+ * since Proxys with mutable data will likely
+ * need to send Notifications and thus will likely want to fetch a reference to 
+ * the Facade during their construction. 
+ * 注意：这个方法是很少被重载的；练习的时候你更可能使用一个command去创建和注册proxys和这个Model一起，
+ * 既然带有多变数据的Proxys很可能需要发送通知，因此很可能想要获得这个外观的一个引用在他们的构造期间。
+ * 
+ * @return {void}
+]]
+function Facade:initializeModel()
+	if self.model ~= nil then
+		return
+	end
+	self.model = Model.getInstance(self.multitonKey)
+end
+--[[
+ * @protected
+ * 
+ * Initialize the {@link puremvc.View View}.
+ * 
+ * Called by the #initializeFacade method.
+ * 被#initializeFacade方法调用
+ * 
+ * Override this method in your subclass of Facade if one or both of the 
+ * following are true:
+ * 在你的子外观里重载这个方法如果有下面的某一条为true:
+ *
+ * - You wish to initialize a different View.
+ * - 你希望实例化一个特殊的View
+ * - You have Observers to register with the View
+ * - 你有观察者需要注册到这个View
+ * 
+ * If you don't want to initialize a different View 
+ * call 'super' #initializeView at the beginning of your
+ * method, then register Mediator instances.
+ * 如果你不想实例化一个特殊的View,那么在你的方法最开始调用父类"Super"的初始化，然后注册中介实例。
+ * 
+ *     MyFacade.prototype.initializeView= function ()
+ *     {
+ *         Facade.prototype.initializeView.call(this);
+ *         this.registerMediator(new MyMediator());
+ *     };
+ * 
+ * Note: This method is *rarely* overridden; in practice you are more
+ * likely to use a command to create and register Mediators
+ * with the View, since Mediator instances will need to send 
+ * Notifications and thus will likely want to fetch a reference 
+ * to the Facade during their construction.
+ * 注意：这个方法是很少被重载的；练习的时候你更可能使用一个command去创建和注册中介和黑着View一起，
+ * 既然中介的实例化需要发送通知，因此很可能像要获得这个外观的一个引用在他们的构造期间。
+ * @return {void}
+]]
+function Facade:initializeView()
+	if self.view ~= nil then
+		return
+	end
+	self.view = View.getInstance(self.multitonKey)
+end
+--[[
+ * Register a command with the Controller by Notification name
+ * 使用一个通知名称和这个Controller注册一个command
+ * @param {string} notificationName
+ * The name of the Notification to associate the command with
+ * 和一个command联系起来的通知名称
+ * @param {Function} commandClassRef
+ * A reference ot the commands constructor.
+ * 一个command构造器的引用实例
+ * @return {void}
+]]
+function Facade:registerCommand(notificationName, commandClassRef)
+	self.controller:registerCommand(notificationName, commandClassRef)	
+end
+--[[
+ * Remove a previously registered command to Notification mapping from the
+ * {@link puremvc.Controller#removeCommand Controller}
+ * 移除一个事先在通知映射里注册好的command
+ * @param {string} notificationName
+ * The name of the the Notification to remove from the command mapping for.
+ * 要从指令映射里移除的通知名称 
+ * @return {void}
+]]
+function Facade:removeCommand(notificationName)
+	self.controller:removeCommand(notificationName)
+end
+--[[
+ * Check if a command is registered for a given notification.
+ * 检测一个指令是否注册了给定的通知
+ * 
+ * @param {string} notificationName
+ * A Notification name
+ * 一个通知的名称
+ * @return {boolean}
+ * Whether a comman is currently registered for the given notificationName
+ * 返回值bool指定了是否指令映射里注册了这个给定通知名称的指令
+]]
+function Facade:hasCommand(notificationName)
+	return self.controller:hasCommand(notificationName)
+end
+--[[
+ * Register a Proxy with the {@link puremvc.Model#registerProxy Model}
+ * by name.
+ * 用名字注册一个代理在model里
+ * 
+ * @param {puremvc.Proxy} proxy
+ *  The Proxy instance to be registered with the Model.
+ * 要注册到model里的Proxy名称
+ * @return {void}
+]]
+function Facade:registerProxy(proxy)
+	self.model:registerProxy(proxy)
+end
+--[[
+ * Retrieve a Proxy from the Model
+ * 从Model里获取到一个Proxy
+ * 
+ * @param {string} proxyName
+ * @return {puremvc.Proxy}
+]]
+function Facade:retrieveProxy(proxyName)
+	return self.model:retrieveProxy(proxyName)
+end
+--[[
+ * Remove a Proxy from the Model by name
+ * 移除一个Model指定名称的Proxy
+ * @param {string} proxyName
+ * The name of the Proxyu
+ * 要移除的代理的名称
+ * @return {puremvc.Proxy}
+ * The Proxy that was removed from the Model
+ * 代理Proxy是否被从Model里移除
+]]
+function Facade:removeProxy(proxyName)
+	local proxy = nil
+	if self.model ~= nil then
+		proxy = self.model:removeProxy(proxyName)
+	end
+	return proxy
+end
+--[[
+ * Check it a Proxy is registered.
+ * 检测这个爱丽是否被注册了
+ * @param {string} proxyName
+ * A Proxy name
+ * 一个代理的名字
+ * @return {boolean}
+ * Whether a Proxy is currently registered with the given proxyName
+ * 给定名称的代理是否已经注册到model里了
+]]
+function Facade:hasProxy(proxyName)
+	return self.model:hasProxy(proxyName)
+end
+--[[
+ * Register a Mediator with with the View.
+ * 注册一个mediator到View里
+ * 
+ * @param {puremvc.Mediator} mediator
+ * A reference to the Mediator to register
+ * 一个注册到view的mediator引用
+ * @return {void}
+]]
+function Facade:registerMediator(mediator)
+	if self.view ~= nil then
+		self.view:registerMediator(mediator)
+	end
+end
+--[[
+ * Retrieve a Mediator from the View by name
+ * 用名字获取一个mediator从view里
+ * 
+ * @param {string} mediatorName
+ *  The Mediators name
+ * 中介者的名字
+ * @return {puremvc.Mediator}
+ *  The retrieved Mediator
+ * 获取到的中介者
+]]
+function Facade:retrieveMediator(mediatorName)
+	return self.view:retrieveMediator(mediatorName)
+end
+
+--[[
+ * Remove a Mediator from the View.
+ * 从View里移除一个中介者
+ * 
+ * @param {string} mediatorName
+ *  The name of the Mediator to remove.
+ * @return {puremvc.Mediator}
+ *  The removed Mediator
+]]
+function Facade:removeMediator(mediatorName)
+	local mediator = nil
+	if self.view ~= nil then
+		mediator = self.view:removeMediator(mediatorName)
+	end
+	return mediator
+end
+--[[
+ * Check if a Mediator is registered or not.
+ * 检测一个指定名字的mediator是否注册了
+ * 
+ * @param {string} mediatorName
+ *  A Mediator name
+ * @return {boolean}
+ *  Whether a Mediator is registered with the given mediatorName
+]]
+function Facade:hasMediator(mediatorName)
+	return self.view:hasMediator(mediatorName)
+end
+--[[
+ * Create and send a 
+ * {@link puremvc.Notification Notification}
+ * 创建并发送一个通知
+ * 
+ * Keeps us from having to construct new Notification instances in our
+ * implementation 
+ * 在我们的实现里让我们远离构造一个通知的实例的方式
+ * 
+ * @param {string} notificationName
+ *  The name of the Notification to send
+ * 要发送的通知的名称
+ * @param {Object} [body]
+ *  The body of the notification
+ * 要发送通知的实体
+ * @param {string} [type]
+ *  The type of the notification
+ * 要发送通知的类型
+ * @return {void}
+]]
+function Facade:sendNotification(notificationName, body, type)
+	self:notifyObservers(Notification.new(notificationName, body, type))
+end
+--[[
+ * Notify {@link puremvc.Observer Observer}s
+ * 
+ * This method is left public mostly for backward compatibility, and to allow
+ * you to send custom notification classes using the facade.
+ * 这个方法大多是为了向后兼容，让你可以使用这个外观发送一个通用的通知
+ * 
+ * Usually you should just call sendNotification and pass the parameters, never 
+ * having to construct the notification yourself.
+ * 通常情况下你应该只调用sendNotification并且传递参数，不要尝试自己构造通知
+ * 
+ * @param {puremvc.Notification} notification
+ *  The Notification to send
+ * 要发送的通知
+ * @return {void}
+]]
+function Facade:notifyObservers(notification)
+	if self.view ~= nil then
+		self.view:notifyObservers(notification)
+	end
+end
+--[[
+ * Initialize the Facades Notifier capabilities by setting the Multiton key for 
+ * this facade instance.
+ * 通过设置一个多例key为了这个外观单例初始化这个外观通知功能
+ * 
+ * Not called directly, but instead from the constructor when #getInstance is 
+ * invoked. It is necessary to be public in order to implement Notifier
+ * 除了当instance的时候在构造器里重触发调用，不要直接调用。必要public是为了实施通知
+ * 
+ * @param {string} key
+ * @return {void}
+]]
+function Facade:initializeNotifier(key)
+	self.multitonKey = key
+end
+--[[
+ * Check if a *Core* is registered or not
+ * 检测一个Core是否注册了
+ *
+ * @static
+ * @param {string} key
+ *  The multiton key for the *Core* in question
+ * @return {boolean}
+ *  Whether a *Core* is registered with the given key
+]]
+function Facade.hasCore(key)
+	return Facade.instanceMap[key] ~= nil
+end
+--[[
+ * Remove a *Core* 
+ * 
+ * Remove the Model, View, Controller and Facade for a given key.
+ * 移除MVC里面给定的key实际例
+ *
+ * @static
+ * @param {string} key
+ * @return {void}
+]]
+function Facade.removeCore(key)
+	if Facade.instanceMap[key] == nil then
+		return
+	end
+	Model.removeModel(key)
+	View.removeView(key)
+	Controller.removeController(key)
+	Facade.instanceMap[key] = nil
+end
+--[[
+ * @ignore
+ * The Multiton Facade instance map.
+ * @static
+ * @protected
+ * @type Array
+]]
+Facade.instanceMap = {}
+--[[
+ * @ignore
+ * Message Constants
+ * @protected
+ * @type {string}
+ * @const
+ * @static
+]]
+Facade.MULTITON_MSG = "Facade instance for this Multiton key already constructed!";
+
+
+return Facade

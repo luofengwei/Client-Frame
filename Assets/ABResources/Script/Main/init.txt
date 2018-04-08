@@ -1,0 +1,21 @@
+pm = pm or {}
+pm.VERSION = '1.0.0'
+pm.FRAMEWORK_NAME = 'puremvc lua'
+--pure mvc框架
+pm.PACKAGE_NAME = 'Script.org.puremvc.lua.multicore'
+
+require(pm.PACKAGE_NAME .. '.help.oop')
+--外部接口
+pm.Facade = import(pm.PACKAGE_NAME .. '.patterns.facade.Facade')
+--中间件
+pm.Mediator = import(pm.PACKAGE_NAME .. '.patterns.mediator.Mediator')
+--代理
+pm.Proxy = import(pm.PACKAGE_NAME .. '.patterns.proxy.Proxy')
+
+pm.SimpleCommand = import(pm.PACKAGE_NAME .. '.patterns.command.SimpleCommand')
+pm.MacroCommand = import(pm.PACKAGE_NAME .. '.patterns.command.MacroCommand')
+pm.Notifier = import(pm.PACKAGE_NAME .. '.patterns.observer.Notifier')
+pm.Notification = import(pm.PACKAGE_NAME .. '.patterns.observer.Notification')
+
+Lua_Table = _G["Lua_Table"] or {}
+autoImport("TableConfig/Table")

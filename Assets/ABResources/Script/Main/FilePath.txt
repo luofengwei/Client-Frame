@@ -1,0 +1,7 @@
+FilePath = 
+{
+	ui = "Script.FrameWork.GUI.",
+	event = "Script.FrameWork.Event.",
+	mediator = "Script.FrameWork.Mediator.",
+	prep = "Script.FrameWork.prep.",
+}

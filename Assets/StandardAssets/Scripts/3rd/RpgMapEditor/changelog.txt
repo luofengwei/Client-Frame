@@ -1,0 +1,103 @@
+--- 1.5.4 ---
+- Added alpha texture in the in game tilemap editor (thanks to bilsimser)
+新增游戏贴图编辑器模式下的透明纹理
+- Improved TouchFollowBehaviour and MapPathFindingBehaviour making the movement smoother
+改善TouchFollowBehaviour和MapPathFindingBehaviour的移动平滑程度
+- Fixed warnings using Handles in Unity 5.6
+修复在Unity5.6上使用Handles的警告
+- Fixed lights when using diffuse material
+修复使用漫反射材质时的灯光bug
+- Fixed issue in Unity5.5 when using serialization mode Force Text
+修复Unity5.5上使用文本强制序列化的问题
+- Fixed bug with TouchFollowBehaviour when clicking not reachable position while moving to the previous target position
+修复TouchFollowBehaviour当点击到不可达到的位置时当正在往前一个目标点移动时
+- Fixed jittering issue when moving the player
+修复移动人物时候的抖动问题
+- Fixed issue with GetAutotile when the returned value is modified
+修复GetAutotile的返回值修正问题
+- Fixed a problem when changing the default material of a tileset, in the build the material was always the Sprite/Default
+修复一个改变贴图集默认材质时的问题，在build中材质一般是精灵/默认
+
+--- 1.5.3 ---
+- Fixed An atlas texture can now be set to Sprite/multiple to make sprites from it.
+修复一个图集纹理可以设置到精灵/从纹理创建的多做精灵
+- Fixed issues with Path Finding when FPS was high (using Fast Quatilty in the Editor)
+修复当高帧率的时候的一些寻路问题（编辑器下使用高质量模式）
+- Fixed issues with FollowerAI
+修复跟随AI的一些bug
+- Fixed touch player controller
+修复触摸屏角色控制
+- Fixed player flickering when using the touch controller
+修复当使用触摸控制的时候角色闪烁
+- Fixed bugs related with high FPS rate
+修复和高帧率有关的bug
+
+--- 1.5.2 ---
+- Added SetAnim(string name) to DirectionalAnimation
+新增SetAnim到定向动画里
+- Added OnAnimationLoopOver event to DirectionalAnimation
+新增OnAnimationLoopOver事件到定向动画里
+- Fixed bug in the DirectionalAnimationController triggering in some cases an out of bounds exception
+修复定向动画控制器里事件触发的一些越界异常bug
+- Fixed Unity 5.4 warnings about OnLevelWasLoaded
+修复5.4的OnLevelWasLoaded接口警告
+- Fixed some Unity5 compatibility issues
+修复一些Unity5的兼容性问题
+
+--- 1.5.1 ---
+- Fixed issue when adding or removing sub-tilesets from a tileset, the colliders were gone
+修复当从贴图集里新增或者删除子贴图集的时候碰撞信息消失的bug
+- Added support for 2D collider check in CompanionAI and NPCBasicAI
+新增在跟随AI和NPCBase-AI里的2D碰撞检测
+- Added PlayerTileMovement controller for a movement based on tiles
+新增基于贴图移动的角色贴图移动控制
+
+--- 1.5.0 ---
+- RPG Framework scripts moved to folder Scripts/RpgFramework
+框架脚本移动到xx文件夹下
+- Added new animation controller for characters: Directional Animator
+新增角色动画控制器：定向动画
+- All characters, including vehicles now use the new directinal animator
+所有角色，包括车载工具现在使用的都是定向动画
+- Improvements in all character behaviours and AI behaviours
+改善所有的角色行为和AI行为
+- Added new AI behaviours: CompanionAI and NPCBasicAI
+新增新的AI行为：陪伴AI和基础NPC-AI
+- Improved teleporter setup with a new option, link with target, so the target teleported is linked with the source
+改善传送设置上的选项，当前在传送源上可以直接链接目标传送点
+- Added a farm scene example with NPCs, animals and vehicles
+新增带有NPC，动物和载具的农田场景例子
+- Renamed demo scenes and added scene selector to all of them
+重命名demo场景并且新增到场景选择器里
+- Added edit collider button to PhysicCharBehaviour
+新增碰撞编辑按钮到物理角色行为里
+
+--- 1.4.3 ---
+- Added CellSize parameter to the tilemap to change the size of a tile in the scene
+新增tilemap的格子尺寸参数为了在场景中改变贴图的尺寸
+- Added method RpgMapHelper.GetTileCenterPosition
+新增方法-XX
+- Fixed TouchFollowBehaviour to be more precise
+修复点触跟随行为以使其更加精确
+- Added  TeleportOnEnter to teleporter to allow teleporting on enter event
+新增回车传送?响应回车的事件
+- Added activation key parameter to teleporter and fixed input management
+新增传送的激活时间关键参数并且修复输入管理
+- Fixed fast player direction change when moving player using path finding
+修复当角色在寻路过程中的快速转向问题
+- Fixed pixel perfect camera according to real camera height
+修复根据相机高度进行像素完美匹配相机
+
+--- 1.4.2 ---
+- Added a toolbar for painting, erase and display help
+新增为绘制工具栏，方便擦除和显示
+- Added teleporter prefab for scene or map transition
+新增传送点预设用来进行场景或地图的传送
+- Added persistence to player object to allow transitions between scenes
+新增允许在场景间直接传送的物件
+- Added framework manual
+新增框架手册
+- Added support for Unity 5.3
+新增对Unity5.3的支持
+- Fixed some minor gui exceptions
+修复小部分gui的显示异常

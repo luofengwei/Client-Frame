@@ -1,0 +1,26 @@
+using "UnityEngine"
+
+require "Script.Main.FilePath" 
+require "Script.Main.Import"
+require "Script.Main.init"
+autoImport("json")
+autoImport("TableUtil")
+--autoImport("UIUtil")
+autoImport("IOUtil")
+
+GameFacade = {}
+GameFacade.Instance = pm.Facade:getInstance("Game")
+
+StartUpCommand = require(FilePath.prep.."StartUpCommand")
+EventStr = require(FilePath.event.."EventStr")
+--UIMediator = require(FilePath.mediator.."UIMediator")
+
+autoImport("GameMain")
+
+Main = 
+{
+}
+
+--registCommand
+GameFacade.Instance:registerCommand(StartEvent.StartUp,StartUpCommand)
+GameFacade.Instance:sendNotification(StartEvent.StartUp)

@@ -1,0 +1,41 @@
+local CDlgBase = class("CDlgBase")
+
+function CDlgBase:ctor(enumTag)
+	-- body
+	if enumTag == nil then
+		self.dlgTag = DlgEnum.None
+	else
+		self.dlgTag = enumTag
+	end
+end
+
+function CDlgBase:close()
+	-- body
+end
+
+function CDlgBase:hide()
+	-- body
+end
+
+function CDlgBase:show()
+	-- body
+end
+
+function CDlgBase:isVisible()
+	-- body
+	return true
+end
+
+function CDlgBase:toggleVisible()
+	-- body
+end
+
+function CDlgBase:init()
+	-- body
+end
+
+function CDlgBase:update()
+	-- body
+end
+
+return CDlgBase

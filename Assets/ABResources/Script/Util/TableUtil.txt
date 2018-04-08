@@ -1,0 +1,261 @@
+TableUtil = {}
+function TableUtil:FindKeyByValue(t,v)
+	for key,value in pairs(t) do
+		if v == value then
+			return key;
+		end
+	end
+    return nil;
+end
+
+function TableUtil:GetValue(t,func)
+    for k,v in pairs(t) do
+        local b = func(v);
+        if(b)then
+            return v;
+        end
+    end
+    return nil;
+end
+
+function TableUtil.ArrayCopy(dest,src)
+    for i=1,#src do
+        dest[i] = src[i]
+    end
+end
+
+function TableUtil:HasValue(t,v)
+    local key = self:FindKeyByValue(t,v)
+    return key ~= nil;
+end
+
+function TableUtil.IndexOf(tab,obj)
+    for _, o in pairs(tab) do
+        if o == obj then
+            return _
+        end
+    end
+    return 0
+end
+
+function TableUtil.ArrayIndexOf(tab,obj)
+    for i=1,#tab do
+        if tab[i]==obj then
+            return i
+        end
+    end
+    return 0
+end
+
+function TableUtil.Remove(tab,obj)
+    for _, o in pairs(tab) do
+        if o == obj then
+            table.remove(tab, _)
+            return _
+        end
+    end
+    return 0
+end
+
+function TableUtil:TableToStr(t)
+    local s = "" 
+    if(t == nil)then
+        return "nil".."\n";
+    end
+    for k, v in pairs(t) do
+         if type(v) ~= "table" then  
+             if v ~= nil then
+                s = s..k.."_"..tostring(v).."\n";
+             else
+                s = s..k.."_".."nil".."\n";
+             end
+         else
+             s = s..k.."_"..TableUtil:TableToStr(v);
+         end
+    end
+    return s
+end
+
+function TableUtil.Print(msg)
+    local out = {}
+    local write = function(value)
+        out[#out + 1] = value
+    end
+    TableUtil.innerPrint(write, msg)
+    print(table.concat(out))
+end
+
+function TableUtil.innerPrint ( write,t )  
+    local print_r_cache={}
+    local function sub_print_r(t,indent)
+        if t==nil then
+            write(indent.."*".."nil")
+        elseif (print_r_cache[tostring(t)]) then
+            write(indent.."*"..tostring(t))
+        else
+            print_r_cache[tostring(t)]=true
+            if (type(t)=="table") then
+                if t.ListFields ~= nil then     
+                    write(indent..tostring(t).."\n")
+                else
+                    for pos,val in pairs(t) do
+                        if type(pos)~="table" then
+ 
+                            -- print("pos "..tostring(pos).." val type"..type(val)) 
+                            -- if type(val)=="table" then
+                            --     print("table pos "..tostring(pos))
+                            --     if pos=="class" then 
+                            --         print("table val "..tostring(val)) 
+                            --     end
+                                -- userData class data
+                            -- end
+
+                            if (type(val)=="table") then  
+                                -- if pos == "userData" or pos == "class" or pos == "data" then                              
+                                    write(indent.."["..pos.."] => "..tostring(t).." {".."\n")
+                                    sub_print_r(val,indent..string.rep("  ",string.len(pos)+8))
+                                    write(indent..string.rep(" ",string.len(pos)+6).."}".."\n")                                
+                                -- end
+                            elseif (type(val)=="string") then
+                                write(indent.."["..pos..'] => "'..val..'"'.."\n")
+                            elseif (type(val)~="function") then
+                                write(indent.."["..pos.."] => "..tostring(val).."\n")
+                            end
+                        end
+                    end
+                end
+            else
+                write(indent..tostring(t).."\n")
+            end
+        end
+    end
+
+    if t == nil then
+        write("nil".."\n")
+    elseif (type(t)=="table") then
+        if t.ListFields ~= nil then            
+            write(tostring(t).."\n")
+        else
+            write(tostring(t).." {".."\n")
+            sub_print_r(t,"  ")
+            write("}".."\n")
+        end
+    else
+        sub_print_r(t,"  ".."\n")
+    end
+end
+
+function TableUtil.filter(func, tbl)
+     local newtbl= {}
+     for i,v in pairs(tbl) do
+         if func(v) then
+         newtbl[i]=v
+         end
+     end
+     return newtbl
+ end
+
+function TableUtil.deepcopy(tDest, tSrc)  
+
+    for key,value in pairs(tSrc) do 
+        if type(value)=='table' and value["spuer"]==nil then 
+            tDest[key] = {}
+            TableUtil.deepcopy(tDest[key],value)  
+        else 
+            tDest[key]=value
+        end 
+    end 
+
+end
+
+function TableUtil.split(szFullString, szSeparator)  
+    local nFindStartIndex = 1
+    local nSplitIndex = 1
+    local nSplitArray = {}
+    while true do
+       local nFindLastIndex = string.find(szFullString, szSeparator, nFindStartIndex)
+       if not nFindLastIndex then
+            nSplitArray[nSplitIndex] = string.sub(szFullString, nFindStartIndex, string.len(szFullString))
+       break
+       end
+       nSplitArray[nSplitIndex] = string.sub(szFullString, nFindStartIndex, nFindLastIndex - 1)
+       nFindStartIndex = nFindLastIndex + string.len(szSeparator)
+       nSplitIndex = nSplitIndex + 1
+    end
+    return nSplitArray
+end
+--[[判断str是否以substr开头。是返回true，否返回false，失败返回失败信息]]
+function TableUtil.startswith(str, substr)
+    if str == nil or substr == nil then
+        return nil, "the string or the sub-stirng parameter is nil"
+    end
+    if string.find(str, substr) ~= 1 then
+        return false
+    else
+        return true
+    end
+end
+
+function printOrange(str)
+    Debug.Log("<color=orange>"..tostring(str).."</color>");
+end
+
+function printRed(str)
+    Debug.Log("<color=red>"..tostring(str).."</color>");
+end
+
+function TableUtil.unserialize(lua)  
+    local t = type(lua)  
+    if t == "nil" or lua == "" then  
+        return nil  
+    elseif t == "number" or t == "string" or t == "boolean" then  
+        lua = tostring(lua)  
+    else  
+        error("can not unserialize a " .. t .. " type.")  
+    end  
+    lua = "return " .. lua  
+    local func = loadstring(lua)  
+    if func == nil then  
+        return nil  
+    end  
+    return func()
+end
+
+function TableUtil.Random(max)
+    local ret=0
+    math.randomseed(os.time())
+    for i=1,3 do
+        n = math.random(max)
+        ret=n
+    end
+    return ret
+end
+
+function TableUtil.clone(object)
+    local lookup_table = {}
+    local function _copy(object)
+        if type(object) ~= "table" then
+            return object
+        elseif lookup_table[object] then
+            return lookup_table[object]
+        end
+        local newObject = {}
+        lookup_table[object] = newObject
+        for key, value in pairs(object) do
+            newObject[_copy(key)] = _copy(value)
+        end
+        return setmetatable(newObject, getmetatable(object))
+    end
+    return _copy(object)
+end
+
+-------guid比较函数------------------
+function TableUtil.CompGuid(guidFis,guidSen)
+    if guidFis ~= nil and guidSen ~= nil then
+        if guidFis.zoneid == guidSen.zoneid and guidFis.create_time == guidSen.create_time 
+            and guidFis.create_index == guidSen.create_index and guidFis.processid == guidSen.processid then
+            return true
+        end
+    end
+    return false
+end
